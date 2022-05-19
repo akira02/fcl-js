@@ -9,38 +9,6 @@ const DEFAULT_APP_METADATA = {
   icons: ["https://avatars.githubusercontent.com/u/62387156?s=280&v=4"],
 }
 
-const services = [
-  {
-    f_type: "Service",
-    f_vsn: "1.0.0",
-    type: "authn",
-    uid: "fcl-wc#authn",
-    endpoint: "flow_authn",
-    id: "0xf8d6e0586b0a20c7",
-    identity: {
-      address: "0xf8d6e0586b0a20c7",
-    },
-    provider: {
-      address: null,
-      name: "Flow WC Wallet",
-      icon: null,
-      description: "A Flow enabled WC Wallet",
-    },
-  },
-  {
-    f_type: "Service",
-    f_vsn: "1.0.0",
-    type: "authz",
-    uid: "fcl-wc#authz",
-    endpoint: "flow_authz",
-    method: "WC/RPC",
-    identity: {
-      address: "0xf8d6e0586b0a20c7",
-      keyId: 0,
-    },
-  },
-]
-
 const checkPersistedState = async client => {
   let pairings, storedSession
   if (typeof client === "undefined") {
@@ -49,7 +17,6 @@ const checkPersistedState = async client => {
   if (client.pairing.topics.length) {
     pairings = client.pairing.values
   }
-  // populates existing session to state (assume only the top one)
   if (client.session?.topics.length) {
     storedSession = await client.session.get(client.session.topics[0])
   }
@@ -101,7 +68,7 @@ export async function wc(service, body, opts = {}) {
     }
   }
 
-  // if pairings === true, need user input, openPairingModal() to select;
+  // if pairings === true, need user input, openPairingModal() to select?
   let session = storedSession
   if (session == null) {
     session = await connectWc(client)
@@ -109,11 +76,11 @@ export async function wc(service, body, opts = {}) {
 
   if (service.endpoint === "flow_authn") {
     try {
-      console.log("<--- handle Authn -->")
+      console.log("<--- handle Authn -->", service.endpoint)
       const result = await client.request({
         topic: session.topic,
         request: {
-          method: "flow_authn",
+          method: service.endpoint,
           params: [],
         },
       })
@@ -131,31 +98,14 @@ export async function wc(service, body, opts = {}) {
       const result = await client.request({
         topic: session.topic,
         request: {
-          method: "flow_authz",
-          params: [body, service.params, service.data, service.type],
+          method: service.endpoint,
+          params: [body],
         },
       })
 
-      onResponse(
-        {
-          f_type: "PollingResponse",
-          f_vsn: "1.0.0",
-          type: "FCL:VIEW:RESPONSE",
-          status: "APPROVED",
-          reason: null,
-          data: {
-            f_type: "CompositeSignature",
-            f_vsn: "1.0.0",
-            addr: "0xf8d6e0586b0a20c7",
-            keyId: 0,
-            signature:
-              "fa74eb89ba9bc7b181e24dbfe1a50e5d02e4aa1d5e4a2421e55dd86ff35e8e4aa960c6baa6554439167e59fcad1701f6aa23f811934140e3be75f41a63459e37",
-          },
-        },
-        {
-          close: () => QRCodeModal.close(),
-        }
-      )
+      onResponse(result, {
+        close: () => QRCodeModal.close(),
+      })
     } catch (e) {
       console.error(e)
     }
