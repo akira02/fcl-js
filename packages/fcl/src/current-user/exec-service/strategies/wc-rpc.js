@@ -7,6 +7,12 @@ export function execWcRPC(service, body, opts, config) {
       async onReady(session, {send}) {
         try {
           if (service.endpoint === "flow_authn") {
+            send({
+              msg: `onReady: ${service.endpoint}`,
+              session: session,
+              endpoint: service.endpoint,
+              body: body,
+            })
           }
           if (service.endpoint === "flow_authz") {
             send({
@@ -54,7 +60,10 @@ export function execWcRPC(service, body, opts, config) {
         }
       },
 
-      onClose(_, {close}) {
+      /*       onClose(_, {close}) {
+        reject(`Declined: Externally Halted`)
+      }, */
+      onClose() {
         reject(`Declined: Externally Halted`)
       },
     })
