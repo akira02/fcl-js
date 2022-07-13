@@ -1,33 +1,30 @@
-import Client, {CLIENT_EVENTS} from "@walletconnect/client"
-import QRCodeModal from "@walletconnect/legacy-modal"
-import {ERROR, getAppMetadata} from "@walletconnect/utils"
+import Client from "@walletconnect/sign-client"
+export {default as QRCodeModal} from "@walletconnect/qrcode-modal"
+export {getSdkError} from "@walletconnect/utils"
+//import { getSdkError, getAppMetadata } from '@walletconnect/utils'
+// export { default as Client } from '@walletconnect/sign-client'
 
-const INIT_DATA = {
-  RELAY_URL: "wss://relay.walletconnect.com",
-  LOGGER: "debug",
-}
-const data = {
-  client: null,
-}
-
-const fclWC = {
-  init: async projectId => {
-    if (data.client) {
-      return data.client
-    }
-    data.client = await Client.init({
-      logger: INIT_DATA.LOGGER,
-      relayUrl: INIT_DATA.RELAY_URL,
-      projectId: projectId,
-    })
-
-    return {client: data.client, CLIENT_EVENTS, QRCodeModal}
-  },
-  Client,
-  CLIENT_EVENTS,
-  QRCodeModal,
-  ERROR,
-  getAppMetadata,
+const DEFAULT_PROJECT_ID = "6427e017c4bd829eef203702a51688b0"
+const DEFAULT_RELAY_URL = "wss://relay.walletconnect.com"
+const DEFAULT_LOGGER = "debug"
+const DEFAULT_APP_METADATA = {
+  name: "Flow WalletConnect",
+  description: "Flow DApp for WalletConnect",
+  url: "https://flow.com/",
+  icons: ["https://avatars.githubusercontent.com/u/62387156?s=280&v=4"],
 }
 
-export default fclWC
+export let client = null
+
+export const initClient = async (projectID, metadata) => {
+  if (client) {
+    return client
+  }
+
+  return Client.init({
+    logger: DEFAULT_LOGGER,
+    relayUrl: DEFAULT_RELAY_URL,
+    projectId: projectID || DEFAULT_PROJECT_ID,
+    metadata: metadata || DEFAULT_APP_METADATA,
+  })
+}

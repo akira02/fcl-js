@@ -35,9 +35,10 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.18.6",
-    "@walletconnect/client": "^2.0.0-beta.26",
-    "@walletconnect/legacy-modal": "^2.0.0-beta.26",
-    "@walletconnect/types": "^2.0.0-beta.26",
-    "@walletconnect/utils": "^2.0.0-beta.26"
+    "@walletconnect/sign-client": "2.0.0-beta.102",
+    "@walletconnect/types": "2.0.0-beta.102",
+    "@walletconnect/utils": "2.0.0-beta.102",
+    "@walletconnect/qrcode-modal": "^1.7.8",
+    "@walletconnect/encoding": "^1.0.1"
   }
 }
