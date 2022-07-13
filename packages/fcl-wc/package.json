@@ -29,7 +29,7 @@
     "start": "fcl-bundle --watch"
   },
   "devDependencies": {
-    "@onflow/fcl-bundle": "^1.0.0",
+    "@onflow/fcl-bundle": "^1.0.1-alpha.0",
     "jest": "^28.1.2",
     "jest-esm-transformer": "1.0.0"
   },

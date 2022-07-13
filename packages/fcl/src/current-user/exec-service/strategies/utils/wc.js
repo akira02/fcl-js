@@ -3,9 +3,9 @@ import {config} from "@onflow/config"
 const noop = () => {}
 
 const DEFAULT_APP_METADATA = {
-  name: "Flow App",
+  name: "Flow WalletConnect",
   description: "Flow DApp for WalletConnect",
-  url: "https://testFlow.com/",
+  url: "https://flow.com/",
   icons: ["https://avatars.githubusercontent.com/u/62387156?s=280&v=4"],
 }
 
@@ -26,10 +26,6 @@ const checkPersistedState = async client => {
     console.log("RESTORED SESSION:", storedSession)
   }
   return {pairings, storedSession}
-  /*   if (client.session && client.session.values.length > 0) {
-    storedSession = await client.session.get(client.session.values[0].topic)
-  }
-  return {pairings, storedSession} */
 }
 
 const connectWc = async (client, QRCodeModal) => {
@@ -84,31 +80,6 @@ const connectWc = async (client, QRCodeModal) => {
       QRCodeModal.close()
     }
   }
-  /*   try {
-    const {uri, approval} = await client.connect({
-      metadata: DEFAULT_APP_METADATA,
-      requiredNamespaces: {
-        flow: {
-          methods: ["flow_signMessage", "flow_authz", "flow_authn"],
-          chains: ["flow:testnet"],
-          events: ["chainChanged", "accountsChanged"],
-        },
-      },
-    })
-
-    if (uri) {
-      QRCodeModal.open(uri, () => {
-        console.log("EVENT", "QR Code Modal closed")
-      })
-    }
-
-    const session = await approval()
-    return session
-  } catch (e) {
-    console.error("client connect error", e)
-  } finally {
-    QRCodeModal.close()
-  } */
 }
 
 export async function wc(service, body, opts = {}) {
@@ -116,7 +87,7 @@ export async function wc(service, body, opts = {}) {
   const onReady = opts.onReady || noop
   const onResponse = opts.onResponse || noop
   const onClose = opts.onClose || noop
-  const {client, QRCodeModal} = await config.get("wc.adapter")
+  const client = await config.get("wc.client")
   const {pairings, storedSession} = await checkPersistedState(client)
 
   const send = msg => {
@@ -145,8 +116,8 @@ export async function wc(service, body, opts = {}) {
 
   if (service.endpoint === "flow_authn") {
     try {
-      console.log("{client, QRCodeModal}  ->", client, QRCodeModal)
       console.log("<--- handle Authn 11 -->", service.endpoint)
+      console.log("session  ->", session)
       const result = await client.request({
         topic: session.topic,
         chainId: "flow:testnet",

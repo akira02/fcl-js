@@ -1,10 +1,8 @@
 import Client from "@walletconnect/sign-client"
 export {default as QRCodeModal} from "@walletconnect/qrcode-modal"
 export {getSdkError} from "@walletconnect/utils"
-//import { getSdkError, getAppMetadata } from '@walletconnect/utils'
-// export { default as Client } from '@walletconnect/sign-client'
 
-const DEFAULT_PROJECT_ID = "6427e017c4bd829eef203702a51688b0"
+const DEFAULT_PROJECT_ID = ""
 const DEFAULT_RELAY_URL = "wss://relay.walletconnect.com"
 const DEFAULT_LOGGER = "debug"
 const DEFAULT_APP_METADATA = {
