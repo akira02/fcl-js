@@ -29,6 +29,7 @@ export async function execService({service, msg = {}, opts = {}, config = {}}) {
       fclLibrary: "https://github.com/onflow/fcl-js",
       hostname: window?.location?.hostname ?? null,
       extensions: window?.fcl_extensions || [],
+      wcPairings: opts.wcPairings,
     },
   }
 

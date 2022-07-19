@@ -116,10 +116,10 @@ async function getAccountProofData() {
   return accountProofData
 }
 
-async function authenticate({service, redir = false} = {}) {
+async function authenticate({service, wcPairings, redir = false} = {}) {
   return new Promise(async (resolve, reject) => {
     spawnCurrentUser()
-    const opts = {redir}
+    const opts = {wcPairings, redir}
     const user = await snapshot()
     const discoveryService = await getDiscoveryService()
     const refreshService = serviceOfType(user.services, "authn-refresh")
