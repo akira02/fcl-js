@@ -55,6 +55,7 @@ export async function wc(service, body, opts = {}) {
     })
   }
 
+  const addr = session?.namespaces["flow"].accounts[0].split(":")[2]
   if (service.endpoint === "flow_authn") {
     try {
       const result = await client.request({
@@ -62,7 +63,7 @@ export async function wc(service, body, opts = {}) {
         chainId: "flow:testnet",
         request: {
           method: service.endpoint,
-          params: [],
+          params: [{addr}],
         },
       })
       onResponse(result, {
@@ -80,7 +81,7 @@ export async function wc(service, body, opts = {}) {
         chainId: "flow:testnet",
         request: {
           method: service.endpoint,
-          params: JSON.parse(JSON.stringify(body || {})),
+          params: [body],
         },
       })
 
