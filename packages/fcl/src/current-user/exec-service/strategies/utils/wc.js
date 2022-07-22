@@ -63,7 +63,7 @@ export async function wc(service, body, opts = {}) {
         chainId: "flow:testnet",
         request: {
           method: service.endpoint,
-          params: [{addr}],
+          params: [JSON.stringify({addr})],
         },
       })
       onResponse(result, {
@@ -81,7 +81,7 @@ export async function wc(service, body, opts = {}) {
         chainId: "flow:testnet",
         request: {
           method: service.endpoint,
-          params: [body],
+          params: [JSON.stringify(body)],
         },
       })
 
